@@ -162,7 +162,7 @@ if __name__ == '__main__':
     for apartment in manager.apartments.values():
         print(apartment.key, apartment.name, apartment.location, apartment.area_m2)
         for room in apartment.rooms.values():
-            print('  ', room.name, room.area_m2)
+            print('gustaw  ', room.name, room.area_m2) 
         
         for bill in manager.bills:
             if bill.apartment == apartment.key:
