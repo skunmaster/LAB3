@@ -109,7 +109,7 @@ class ApartamentSettlement (BaseModel):
         self.rent = rent
         self.utility_costs = utility_costs
     
-    def calculator(self):
+    def kalkulator(self):
         total = self.rent + self.utility_costs
         return total
     
