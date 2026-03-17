@@ -48,7 +48,44 @@ class Tenant(BaseModel):
             data = json.load(file)
         assert isinstance(data, dict), "Expected a dictionary of tenants"
         return {key: Tenant(**tenant) for key, tenant in data.items()}
-    
+
+class TenantSettlement(BaseModel):
+    tenant: str
+    apartment: str
+    settlement_year: int
+    settlement_month: int
+
+    rent_pln: float
+    bills_pln: float 
+    total_cost_pln: float 
+
+    transfers_pln: float
+    balance_pln: float 
+
+    @staticmethod
+    def calculate(tenant: Tenant, transfers: list[Transfer], bills: list[Bill], year:int, month:int):
+        rent = tenant.rent_pln
+
+        bills_sum= sum( bill.amount_pln for bill in bills 
+                       if bill.apartment == tenant.apartment and bill.settlement_year == year and bill.settlement_month == month)
+
+        transfers_sum = sum(transfer.amount_pln for transfer in transfers
+            if transfer.tenant == tenant.name and transfer.settlement_year == year and transfer.settlement_month == month)
+
+        total_costs = rent + bills_sum
+        balance = transfers_sum - total_costs
+
+        return TenantSettlement(tenant=tenant.name,
+            apartment=tenant.apartment,
+            settlement_year=year,
+            settlement_month=month,
+            rent_pln=rent,
+            bills_pln=bills_sum,
+            total_costs_pln=total_costs,
+            transfers_pln=transfers_sum,
+            balance_pln=balance)
+
+
 
 class Transfer(BaseModel):
     amount_pln: float
